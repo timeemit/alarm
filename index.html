@@ -27,19 +27,32 @@
         height: 114px;
         padding: 3px;
       }
+
+      .time-unit { display: inline-block; }
+      .separator {
+        line-height: 2em;
+        vertical-align: bottom;
+      }
+      .label { font-size: 40px; }
     </style>
   </head>
   <body>
-    <h1 class="align-center">Pomodoro Timer</h1>
-    <div id="timer" class="align-center">
-      <h2>
+    <h2 class="align-center">Look Away In</h1>
+    <h1 id="timer" class="align-center">
+      <div class="time-unit">
         <span id="hours" class="interact">00</span>
-        :
+        <div class="label">Hours</div>
+      </div>
+      <div class="time-unit separator"> : </div>
+      <div class="time-unit">
         <span id="minutes" class="interact">30</span>
-        :
+        <div class="label">Minutes</div>
+      </div>
+      <div class="time-unit separator">:</div>
+      <div class="time-unit">
         <span id="seconds" class="interact">00</span>
-      </h2>
-    </div>
+        <div class="label">Seconds</div>
+    </h1>
     <script>
       var tick;
       var config = { "hours": 0, "minutes": 30, "seconds": 0 };
