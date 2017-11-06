@@ -165,7 +165,7 @@
 
         // Replace the span with an input
         inputNode.type = "text";
-        inputNode.value = time[this.id];
+        inputNode.value = display(time[this.id]);
         inputNode.id = this.id;
         inputNode.onblur = update;
         this.parentNode.replaceChild(inputNode, this);
