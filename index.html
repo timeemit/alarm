@@ -1,0 +1,167 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Pomodoro Timer</title>
+    <meta name="description" content="Variable timer to look away from screen">
+    <style>
+      body, body input { font-family: arial; }
+      h1 { font-size: 100px; }
+      h2 { font-size: 70px; }
+      .align-center { text-align: center; }
+      .align-left { text-align: left; }
+      .align-right { text-align: right; }
+      .interact:hover { cursor: pointer; }
+      #timer input {
+        width: 120px;
+        font-size: 70px;
+        font-weight: bold;
+      }
+      #timer span.interact {
+        text-align: left;
+        display: inline-block;
+        width: 114px;
+        padding: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="align-center">Pomodoro Timer</h1>
+    <div id="timer" class="align-center">
+      <h2>
+        <span id="hours" class="interact">00</span>
+        :
+        <span id="minutes" class="interact">30</span>
+        :
+        <span id="seconds" class="interact">00</span>
+      </h2>
+    </div>
+    <script>
+      var tick;
+      var config = { "hours": 0, "minutes": 30, "seconds": 0 };
+      var time = Object.assign({}, config);
+
+      var display = function(time) {
+        return time === 0 ? "00" : time;
+      }
+      var countdown = function() {
+        time.seconds -= 1;
+        if (time.hours + time.minutes + time.seconds === 0) {
+          // Grab attention
+          alert("Take a break!");
+
+          // Reset
+          time = Object.assign({}, config);
+        }
+        if (time.seconds < 0) {
+          time.minutes -= 1;
+          time.seconds = 59;
+        }
+        if (time.minutes < 0) {
+          time.hours -= 0;
+          time.minutes += 60;
+        }
+        Object.keys(time).forEach(function(key) {
+          document.getElementById(key).innerHTML = display(time[key]);
+        });
+      }
+
+      var update = function() {
+        var textNode = document.createElement("span");
+
+        // Store the selected value
+        config[this.id] = +this.value;
+        time[this.id] = +this.value;
+
+        // Replace the input with a span
+        textNode.id = this.id;
+        textNode.innerHTML = display(time[this.id]);
+        textNode.className = "interact";
+        textNode.onclick = interact;
+        this.parentNode.replaceChild(textNode, this);
+
+        // Continue counting
+        tick = setInterval(countdown, 1000);
+
+        // Garbage collection
+        delete(this);
+      };
+
+      var key = function(e) {
+        var k = e.which;
+        var target = e.target;
+
+        if (k === 9) {
+          /// Tab
+          var id = target.id;
+          var shift_used = e.shiftKey;
+          var next = {
+            "": "hours",
+            "hours": "minutes",
+            "minutes": "seconds"
+          }
+          var previous = {
+            "minutes": "hours",
+            "seconds": "minutes",
+            "": "seconds"
+          }
+
+          // Stop normal key event
+          e.preventDefault();
+
+          // Blur the input, triggering update()
+          target.blur();
+
+          // Move to the next for tab without shift
+          if (shift_used === false && id !== "seconds") {
+            document.getElementById(next[id]).click();
+          }
+
+          // Move to the previous for tab with shift
+          if (shift_used === true && id !== "hours") {
+            document.getElementById(previous[id]).click();
+          }
+
+        } else if (k === 13) {
+          // Enter
+
+          // Stop normal key event
+          e.preventDefault();
+
+          // Blur the input, triggering update()
+          target.blur();
+        }
+        return true;
+      };
+
+      var interact = function() {
+        var inputNode = document.createElement("input");
+
+        // Stop counting down
+        clearInterval(tick);
+
+        // Replace the span with an input
+        inputNode.type = "number";
+        inputNode.value = time[this.id];
+        inputNode.id = this.id;
+        inputNode.onblur = update;
+        this.parentNode.replaceChild(inputNode, this);
+
+        // Focus on the input
+        inputNode.focus();
+
+        // Garbage collection
+        delete(this);
+      };
+
+      window.onload = function(){
+        document.getElementById("hours").onclick = interact;
+        document.getElementById("minutes").onclick = interact;
+        document.getElementById("seconds").onclick = interact;
+
+        document.onkeydown = key;
+
+        tick = setInterval(countdown, 1000);
+      };
+    </script>
+  </body>
+</html>
