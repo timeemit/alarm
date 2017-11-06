@@ -58,9 +58,12 @@
       var config = { "hours": 0, "minutes": 30, "seconds": 0 };
       var time = Object.assign({}, config);
 
+      // Helper to display numbers less than ten with two digits
       var display = function(time) {
         return time < 10 ? "0" + time : time;
       }
+
+      // Triggered on 1 second intervals
       var countdown = function() {
         time.seconds -= 1;
         if (time.hours + time.minutes + time.seconds === 0) {
@@ -83,6 +86,7 @@
         });
       }
 
+      // Triggered onblur of input field
       var update = function() {
         var textNode = document.createElement("span");
 
@@ -104,6 +108,7 @@
         delete(this);
       };
 
+      // Triggered on keypressdown on document
       var key = function(e) {
         var k = e.which;
         var target = e.target;
@@ -151,6 +156,7 @@
         return true;
       };
 
+      // Triggered onclick for a <span>;
       var interact = function() {
         var inputNode = document.createElement("input");
 
