@@ -59,7 +59,7 @@
       var time = Object.assign({}, config);
 
       var display = function(time) {
-        return time === 0 ? "00" : time;
+        return time < 10 ? "0" + time : time;
       }
       var countdown = function() {
         time.seconds -= 1;
